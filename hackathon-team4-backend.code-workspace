@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../flask_python/public"
+		},
+		{
+			"path": "../flask_python/__pycache__"
+		}
+	],
+	"settings": {}
+}

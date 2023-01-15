@@ -1,22 +1,88 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from random import randint
 
 db = SQLAlchemy()
 migrate = Migrate(db)
 
-class User(db.Model):
+class Staff(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    clocked_in = db.Column(db.Boolean, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    manager = db.Column(db.Boolean, nullable=False)
+    empl_id = db.Column(db.Integer, nullable=False)
+    section = db.Column(db.String(30))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
+    def __init__(self, name, password, manager=False):
+        self.name = name
         self.password = password
+        self.empl_id = randint(10000, 99999)
+        self.section = None
+        self.manager = manager
+        self.clocked_in = False
+
+
+
+        
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Staff %r>' % self.name
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'password': self.password,
+            'manager': self.manager,
+            'clocked_in': self.clocked_in,
+            'section': self.section,
+            'empl_id': self.empl_id
+        }
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+    id = db.Column(db.Integer, primary_key=True)
+    table_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    total = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, table_id):
+        self.table_id = table_id
+        self.total = 0
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'table_id': self.table_id,
+            'total': self.total
+        }
+
+class Reciept_Item(db.Model):
+    __tablename__ = 'recepit_orders'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    item_name = db.Column(db.String(25), nullable=False)
+    item_price = db.Column(db.Integer, nullable=False)
+    instructions = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, order_id, item_name, item_price, instructions=None):
+        self.order_id = order_id
+        self.item_name = item_name
+        self.item_price = item_price
+        self.instructions = instructions
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'item_name': self.item_name,
+            'item_price': self.item_price,
+            'instructions': self.instructions
+        }

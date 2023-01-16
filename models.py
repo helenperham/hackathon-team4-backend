@@ -64,15 +64,15 @@ class Order(db.Model):
 
     def receipt_items(self):
         items = []
-        for item in Reciept_Item.query.all():
+        for item in Receipt_Item.query.all():
             items.append(item)
             return items
 
     # def table(self):
     #     return Table.query.get(self.id)
 
-class Reciept_Item(db.Model):
-    __tablename__ = 'reciept_items'
+class Receipt_Item(db.Model):
+    __tablename__ = 'receipt_orders'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, nullable=False)
     item_name = db.Column(db.String(25), nullable=False)
@@ -104,7 +104,7 @@ class Menu_Item(db.Model):
     __tablename__ = 'menu_items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    order_id = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String, nullable=False)
     stock_remaining = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -127,4 +127,34 @@ class Menu_Item(db.Model):
             'category': self.category,
             'stock_remaining': self.stock_remaining,
             'price': self.price
+        }
+
+
+class Table(db.Model):
+    __tablename__ = 'tables'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer, nullable=False)
+    server_id = db.Column(db.Integer, nullable=False)
+    max_num_guests = db.Column(db.Integer, nullable=False)
+    table_status = db.Column(db.String, nullable=False)
+    section = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, name, server_id, max_num_guests, table_status, section):
+        self.name = name
+        self.server_id = server_id
+        self.max_num_guests = max_num_guests
+        self.table_status = table_status
+        self.section = section
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'server_id': self.server_id,
+            'max_num_guests': self.max_num_guests,
+            'table_status': self.table_status,
+            'section': self.section
         }

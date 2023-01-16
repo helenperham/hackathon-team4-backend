@@ -11,9 +11,20 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-@app.get('/')
-def home():
-    return send_file('welcome.html')
+@app.get('/staff')
+def all_staff():
+    staff = Staff.query.all()
+    return jsonify([s.to_dict() for s in staff]), 202
+
+@app.get('/servers')
+def all_servers():
+    servers = Staff.query.filter_by(manager=False)
+    return jsonify([s.to_dict() for s in servers])
+
+@app.get('/managers')
+def all_managers():
+    managers = Staff.query.filter_by(manager=True)
+    return jsonify([m.to_dict() for m in managers])
 
 
 if __name__ == '__main__':

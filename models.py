@@ -86,3 +86,33 @@ class Reciept_Item(db.Model):
             'item_price': self.item_price,
             'instructions': self.instructions
         }
+
+
+class Menu_Item(db.Model):
+    __tablename__ = 'menu_items'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    category = db.Column(db.String, nullable=False)
+    stock_remaining = db.Column(db.Iteger, nullable=False)
+    price = db.Coumn(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, name, order_id, category, stock_remaining, price):
+        self.name = name
+        self.order_id = order_id
+        self.category = category
+        self.stock_remaining = stock_remaining
+        self.price = price
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'order_id': self.order_id,
+            'category': self.category,
+            'stock_remaining': self.stock_remaining,
+            'price': self.price
+        }

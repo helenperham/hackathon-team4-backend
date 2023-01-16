@@ -6,7 +6,7 @@ db = SQLAlchemy()
 migrate = Migrate(db)
 
 class Staff(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'staffs'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     clocked_in = db.Column(db.Boolean, nullable=False)
@@ -46,7 +46,7 @@ class Staff(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
-    table_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    table_id = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
@@ -62,10 +62,19 @@ class Order(db.Model):
             'total': self.total
         }
 
+    def receipt_items(self):
+        items = []
+        for item in Reciept_Item.query.all():
+            items.append(item)
+            return items
+
+    # def table(self):
+    #     return Table.query.get(self.id)
+
 class Reciept_Item(db.Model):
     __tablename__ = 'recepit_orders'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    order_id = db.Column(db.Integer, nullable=False)
     item_name = db.Column(db.String(25), nullable=False)
     item_price = db.Column(db.Integer, nullable=False)
     instructions = db.Column(db.String(200))
@@ -86,3 +95,6 @@ class Reciept_Item(db.Model):
             'item_price': self.item_price,
             'instructions': self.instructions
         }
+
+    def order(self):
+        return Order.query.get(self.order_id)

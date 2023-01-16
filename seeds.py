@@ -11,7 +11,7 @@ with app.app_context():
     db.session.commit()
 
 with app.app_context():
-    menu_item1 = Menu_Item(name: 'Classic Ramen', order_id: '1', category: 'entree', stock_remaining: 100, price: 8.00)
+    menu_item1 = Menu_Item('Classic Ramen', '1','entree', 100, 8.00)
     menu_item2 = Menu_Item(name: 'Negi-Goma Ramen', order_id: '1', category: 'entree', stock_remaining: 50, price: 12.00)
     menu_item3 = Menu_Item(name: 'Miso Ramen', order_id: '1', category: 'entree', stock_remaining: 50, price: 10.00)
     menu_item4 = Menu_Item(name: 'Shio Ramen', order_id: '1', category: 'entree', stock_remaining: 50, price: 10.00)

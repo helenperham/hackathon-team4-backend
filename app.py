@@ -49,7 +49,7 @@ def create_order():
     db.session.commit()
     return jsonify(order.to_dict()), 202
 
-@app.patch('/order_total/<int:id')
+@app.patch('/order_total/<int:id>')
 def order_total(id):
     data = request.form
     order = Order.query.get(id)

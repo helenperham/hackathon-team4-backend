@@ -106,8 +106,8 @@ class Menu_Item(db.Model):
     name = db.Column(db.String, nullable=False)
     order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
     category = db.Column(db.String, nullable=False)
-    stock_remaining = db.Column(db.Iteger, nullable=False)
-    price = db.Coumn(db.Float, nullable=False)
+    stock_remaining = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())

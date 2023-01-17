@@ -28,14 +28,18 @@ def all_managers():
 
 @app.patch('/assign_section/<int:id>')
 def assign_section(id):
-    data=request.form
+    data=request.json
     server = Staff.query.get(id)
     server.section = data['section']
+    table = Table.query.filter_by(section= data['section'], table_status = True)
+    if table.count() > 0:
+        table[0].server_id = server.id
+    db.session.commit()
     return jsonify(server.to_dict()), 202
 
 @app.post('/receipt_items')
 def create_item():
-    data = request.form
+    data = request.json
     item = Receipt_Item(data['order_id'], data['item_name'], data['item_price'], data['instructions'])
     db.session.add(item)
     db.session.commit()
@@ -43,7 +47,7 @@ def create_item():
 
 @app.post('/orders')
 def create_order():
-    data = request.form
+    data = request.json
     order = Order(data['table_id'])
     db.session.add(order)
     db.session.commit()
@@ -51,13 +55,12 @@ def create_order():
 
 @app.patch('/order_total/<int:id>')
 def order_total(id):
-    data = request.form
+    data = request.json
     order = Order.query.get(id)
     order.total = data['total']
     order.order_status = False
-    db.session.add(order)
     db.session.commit()
-    return jsonify({'order':order.to_dict(), 'items':[i.to_dict() for i in order.receipt_items]}), 202
+    return jsonify({'order':order.to_dict(), 'items':order.print_receipt()}), 202
 
 @app.get('/table/<int:id>/currentorder')
 def order_in_progress(id):
@@ -76,7 +79,6 @@ def clock_in(id):
     staff = Staff.query.get(id)
     if staff:
         staff.clocked_in = True
-        db.session.add(staff)
         db.session.commit()
         return jsonify(staff.to_dict()), 202
     else:
@@ -86,15 +88,22 @@ def clock_in(id):
 def activate_table(id):
     table = Table.query.get(id)
     table.table_status = True
-    staff_list = Staff.query.filter_by(section=table.section).order_by(len(Staff.tables()).desc)
+    staff_list = Staff.query.filter_by(section=table.section).order_by(len(Staff.tables()).desc())
     if len(staff_list) > 0:
         staff = staff_list[0]
         table.server_id = staff.id
-        db.session.add(table)
-        db.commit()
+        db.session.commit()
         return {'table':jsonify(table.to_dict), 'message':f'{staff.name} was assigned to this table'}, 202
     else:
         return {'error': 'No servers assigned to that section'}, 404
+
+@app.patch('/table/<int:id>/deactivate')
+def deactivate_table(id):
+    table = Table.query.get(id)
+    table.table_status = False
+    table.server.id = None
+    db.session.commit()
+    return jsonify(table.to_dict()), 202
 
 
 

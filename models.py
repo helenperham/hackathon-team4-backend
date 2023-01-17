@@ -48,12 +48,14 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     table_id = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
+    order_status = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
     def __init__(self, table_id):
         self.table_id = table_id
         self.total = 0
+        self.order_status = True
         
     def to_dict(self):
         return {
@@ -136,17 +138,17 @@ class Table(db.Model):
     name = db.Column(db.Integer, nullable=False)
     server_id = db.Column(db.Integer, nullable=False)
     max_num_guests = db.Column(db.Integer, nullable=False)
-    table_status = db.Column(db.String, nullable=False)
+    table_status = db.Column(db.Boolean, nullable=False)
     section = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, name, server_id, max_num_guests, table_status, section):
+    def __init__(self, name, server_id, max_num_guests, section):
         self.name = name
         self.server_id = server_id
         self.max_num_guests = max_num_guests
-        self.table_status = table_status
+        self.table_status = False
         self.section = section
 
     def to_dict(self):

@@ -52,9 +52,8 @@ print('Seeding database ... 🌱')
 #     table4 = Table('4', none, '2', False, '2')
 #     table5 = Table('5', none, '4', False, '3')
 #     table6 = Table('6', none, '4', False, '3')
-#     table7 = Table('7', none, '4', False, '3')
-#     table8 = Table('8', none, '4', False, '4')
-#     db.session.add_all([table1, table2, table3, table4, table5, table6, table7, table8])
+#     table7 = Table('8', none, '4', False, '4')
+#     db.session.add_all([table1, table2, table3, table4, table5, table6, table7])
 #     db.session.commit()
 
 # with app.app_context():

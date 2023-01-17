@@ -37,6 +37,15 @@ def assign_section(id):
     db.session.commit()
     return jsonify(server.to_dict()), 202
 
+
+@app.patch('/staff/<int:id>/clocked_in')
+def clocked_in(id):
+    staff = Staff.query.get(id)
+    print(staff.clocked_in)
+    staff.clocked_in = request.json["clocked_in"]
+    db.session.commit()
+    return jsonify(staff.to_dict()), 202
+
 @app.post('/receipt_items')
 def create_item():
     data = request.json

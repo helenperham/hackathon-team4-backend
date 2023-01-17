@@ -66,12 +66,12 @@ class Order(db.Model):
 
     def receipt_items(self):
         items = []
-        for item in Receipt_Item.query.all():
+        for item in Receipt_Item.query.filter_by(order_id = self.id):
             items.append(item)
             return items
 
-    # def table(self):
-    #     return Table.query.get(self.id)
+    def table(self):
+        return Table.query.get(self.id)
 
 class Receipt_Item(db.Model):
     __tablename__ = 'receipt_items'
@@ -160,3 +160,9 @@ class Table(db.Model):
             'table_status': self.table_status,
             'section': self.section
         }
+
+    def orders(self):
+        return Order.query.filter_by(table_id=self.id)
+
+    def current_orders(self):
+        return Order.query.filter_by(table_id=self.id, order_status=True)

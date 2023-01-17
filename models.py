@@ -104,10 +104,10 @@ class Menu_Item(db.Model):
     __tablename__ = 'menu_items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    order_id = db.Column(db.Integer, nullable=False, foreign_key=True)
+    order_id = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String, nullable=False)
-    stock_remaining = db.Column(db.Iteger, nullable=False)
-    price = db.Coumn(db.Float, nullable=False)
+    stock_remaining = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
@@ -127,4 +127,34 @@ class Menu_Item(db.Model):
             'category': self.category,
             'stock_remaining': self.stock_remaining,
             'price': self.price
+        }
+
+
+class Table(db.Model):
+    __tablename__ = 'tables'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer, nullable=False)
+    server_id = db.Column(db.Integer, nullable=False)
+    max_num_guests = db.Column(db.Integer, nullable=False)
+    table_status = db.Column(db.String, nullable=False)
+    section = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, name, server_id, max_num_guests, table_status, section):
+        self.name = name
+        self.server_id = server_id
+        self.max_num_guests = max_num_guests
+        self.table_status = table_status
+        self.section = section
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'server_id': self.server_id,
+            'max_num_guests': self.max_num_guests,
+            'table_status': self.table_status,
+            'section': self.section
         }

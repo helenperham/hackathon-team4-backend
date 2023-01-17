@@ -17,8 +17,9 @@ class Staff(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, name, password, manager=False):
+    def __init__(self, name, password, manager=False, clocked_in=False):
         self.name = name
+        self.clocked_in = clocked_in
         self.password = password
         self.empl_id = randint(10000, 99999)
         self.section = None
@@ -135,7 +136,7 @@ class Table(db.Model):
     name = db.Column(db.Integer, nullable=False)
     server_id = db.Column(db.Integer, nullable=False)
     max_num_guests = db.Column(db.Integer, nullable=False)
-    table_status = db.Column(db.Boolean, nullable=False)
+    table_status = db.Column(db.Boolean, default=False)
     section = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(

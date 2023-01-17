@@ -21,6 +21,14 @@ def all_servers():
     servers = Staff.query.filter_by(manager=False)
     return jsonify([s.to_dict() for s in servers]), 201
 
+@app.get('/staff/<int:id>')
+def show(id):
+    staff = Staff.query.get(id)
+    if staff:
+        return jsonify(staff.to_dict())
+    else:
+        return {'error': 'Staff not found'}
+
 @app.get('/managers')
 def all_managers():
     managers = Staff.query.filter_by(manager=True)
@@ -30,6 +38,7 @@ def all_managers():
 def assign_section(id):
     data=request.json
     server = Staff.query.get(id)
+    if data['section']
     server.section = data['section']
     table = Table.query.filter_by(section= data['section'], table_status = True)
     if table.count() > 0:
@@ -83,7 +92,7 @@ def receipt_items(id):
     items = order.reciept_items()
     return jsonify([i.to_dict() for i in items]), 202
 
-@app.patch('/staff/<int:id>/clock_in')
+@app.get('/staff/<int:id>/clock_in')
 def clock_in(id):
     staff = Staff.query.get(id)
     if staff:

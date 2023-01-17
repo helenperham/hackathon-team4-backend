@@ -78,7 +78,7 @@ class Receipt_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, nullable=False)
     item_name = db.Column(db.String(25), nullable=False)
-    item_price = db.Column(db.Integer, nullable=False)
+    item_price = db.Column(db.Float, nullable=False)
     instructions = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
@@ -106,7 +106,6 @@ class Menu_Item(db.Model):
     __tablename__ = 'menu_items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    order_id = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String, nullable=False)
     stock_remaining = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -114,9 +113,8 @@ class Menu_Item(db.Model):
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, name, order_id, category, stock_remaining, price):
+    def __init__(self, name, category, stock_remaining, price):
         self.name = name
-        self.order_id = order_id
         self.category = category
         self.stock_remaining = stock_remaining
         self.price = price
@@ -125,7 +123,6 @@ class Menu_Item(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'order_id': self.order_id,
             'category': self.category,
             'stock_remaining': self.stock_remaining,
             'price': self.price
@@ -159,4 +156,31 @@ class Table(db.Model):
             'max_num_guests': self.max_num_guests,
             'table_status': self.table_status,
             'section': self.section
+        }
+
+
+class Add_On(db.Model):
+    __tablename__ = 'add_ons'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    receipt_item_id = db.Column(db.Integer, nullable=False)
+    stock_remaining = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def __init__(self, name, receipt_item_id, stock_remaining, price):
+        self.name = name
+        self.receipt_item_id = receipt_item_id
+        self.stock_remaining = stock_remaining
+        self.price = price
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'receipt_item_id': self.receipt_item_id,
+            'stock_remaining': self.stock_remaining,
+            'price': self.price
         }

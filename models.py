@@ -43,6 +43,12 @@ class Staff(db.Model):
             'empl_id': self.empl_id
         }
 
+    def tables(self):
+        tables = []
+        for table in Table.query.filter_by(staff_id = self.id):
+            tables.append(table)
+            return tables
+
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
@@ -72,6 +78,12 @@ class Order(db.Model):
 
     def table(self):
         return Table.query.get(self.id)
+
+    def print_receipt(self):
+        receipt = []
+        for item in self.receipt_items():
+            receipt.append({'name':f'{item.name}', 'price':f'{item.price}', 'instructions':f'{item.instructions}'})
+        return receipt
 
 class Receipt_Item(db.Model):
     __tablename__ = 'receipt_items'

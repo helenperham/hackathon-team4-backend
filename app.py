@@ -38,13 +38,15 @@ def all_managers():
 def assign_section(id):
     data=request.json
     server = Staff.query.get(id)
-    if data['section']
-    server.section = data['section']
-    table = Table.query.filter_by(section= data['section'], table_status = True)
-    if table.count() > 0:
-        table[0].server_id = server.id
-    db.session.commit()
-    return jsonify(server.to_dict()), 202
+    if data['section']:
+        server.section = data['section']
+        table = Table.query.filter_by(section= data['section'], table_status = True)
+        if table.count() > 0:
+            table[0].server_id = server.id
+        db.session.commit()
+        return jsonify(server.to_dict()), 202
+    else:
+        return {'error': 'section not found'}, 404
 
 @app.post('/receipt_items')
 def create_item():

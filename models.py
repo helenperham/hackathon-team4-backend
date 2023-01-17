@@ -64,15 +64,15 @@ class Order(db.Model):
 
     def receipt_items(self):
         items = []
-        for item in Reciept_Item.query.all():
+        for item in Receipt_Item.query.all():
             items.append(item)
             return items
 
     # def table(self):
     #     return Table.query.get(self.id)
 
-class Reciept_Item(db.Model):
-    __tablename__ = 'reciept_items'
+class Receipt_Item(db.Model):
+    __tablename__ = 'receipt_orders'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, nullable=False)
     item_name = db.Column(db.String(25), nullable=False)

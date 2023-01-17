@@ -1,5 +1,5 @@
 from app import app
-from models import db, Staff, Order, Reciept_Item, Menu_Item, Table
+from models import db, Staff, Order, Receipt_Item, Menu_Item, Table
 
 print('Seeding database ... 🌱')
 # Add your seed data here

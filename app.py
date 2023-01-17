@@ -3,7 +3,7 @@ from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, Staff, Order, Reciept_Item
+from models import db, Staff, Order, Receipt_Item
 
 app = Flask(__name__, static_folder='public')
 CORS(app, origins=['*'])
@@ -33,10 +33,10 @@ def assign_section(id):
     server.section = data['section']
     return jsonify(server.to_dict()), 202
 
-@app.post('/reciept_items')
+@app.post('/receipt_items')
 def create_item():
     data = request.form
-    item = Reciept_Item(data['order_id'], data['item_name'], data['item_price'], data['instructions'])
+    item = Receipt_Item(data['order_id'], data['item_name'], data['item_price'], data['instructions'])
     db.session.add(item)
     db.session.commit()
     return jsonify(item.to_dict()), 202
@@ -49,14 +49,14 @@ def create_order():
     db.session.commit()
     return jsonify(order.to_dict()), 202
 
-@app.patch('/order_total/<int:id')
+@app.patch('/order_total/<int:id>')
 def order_total(id):
     data = request.form
     order = Order.query.get(id)
     order.total = data['total']
     db.session.add(order)
     db.session.commit()
-    return jsonify({'order':order.to_dict(), 'items':[i.to_dict for i in order.reciept_items]}), 202
+    return jsonify({'order':order.to_dict(), 'items':[i.to_dict for i in order.receipt_items]}), 202
 
 
 

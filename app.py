@@ -5,9 +5,15 @@ from flask_cors import CORS
 from config import Config
 from models import db, Staff, Order, Receipt_Item, Table
 
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+
 app = Flask(__name__, static_folder='public')
 CORS(app, origins=['*'])
 app.config.from_object(Config)
+jwt = JWTManager(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -38,7 +44,8 @@ def all_managers():
 def assign_section(id):
     data=request.json
     server = Staff.query.get(id)
-    if data['section']:
+    sections = ['1', '2', '3', '4']
+    if data['section'] in sections:
         server.section = data['section']
         table = Table.query.filter_by(section= data['section'], table_status = True)
         if table.count() > 0:
@@ -85,11 +92,21 @@ def receipt_items(id):
     items = order.reciept_items()
     return jsonify([i.to_dict() for i in items]), 202
 
-@app.get('/staff/<int:id>/clock_in')
+@app.patch('/staff/<int:id>/clock_in')
 def clock_in(id):
     staff = Staff.query.get(id)
     if staff:
         staff.clocked_in = True
+        db.session.commit()
+        return jsonify(staff.to_dict()), 202
+    else:
+        return {'error': 'Staff not found'}, 404
+
+@app.patch('/staff/<int:id>/clock_out')
+def clock_out(id):
+    staff = Staff.query.get(id)
+    if staff:
+        staff.clocked_in = False
         db.session.commit()
         return jsonify(staff.to_dict()), 202
     else:
@@ -104,7 +121,7 @@ def activate_table(id):
         staff = staff_list[0]
         table.server_id = staff.id
         db.session.commit()
-        return {'table':jsonify(table.to_dict), 'message':f'{staff.name} was assigned to this table'}, 202
+        return jsonify({'table':table.to_dict(), 'message':f'{staff.name} was assigned to this table'}), 202
     else:
         return {'error': 'No servers assigned to that section'}, 404
 

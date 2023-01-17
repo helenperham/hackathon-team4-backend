@@ -54,6 +54,7 @@ def order_total(id):
     data = request.form
     order = Order.query.get(id)
     order.total = data['total']
+    order.order_status = False
     db.session.add(order)
     db.session.commit()
     return jsonify({'order':order.to_dict(), 'items':[i.to_dict() for i in order.receipt_items]}), 202
@@ -68,12 +69,32 @@ def order_in_progress(id):
 def receipt_items(id):
     order = Order.query.get(id)
     items = order.reciept_items()
-    return jsonify([i.to_dict() for i in items])
+    return jsonify([i.to_dict() for i in items]), 202
 
-# @app.patch('/close_order/<int:id>')
-# def close_order(id):
-#     order = Order.query.get(id)
-#     order.
+@app.patch('/staff/<int:id>/clock_in')
+def clock_in(id):
+    staff = Staff.query.get(id)
+    if staff:
+        staff.clocked_in = True
+        db.session.add(staff)
+        db.session.commit()
+        return jsonify(staff.to_dict()), 202
+    else:
+        return {'error': 'Staff not found'}, 404
+
+@app.patch('/table/<int:id>/activate')
+def activate_table(id):
+    table = Table.query.get(id)
+    table.table_status = True
+    staff_list = Staff.query.filter_by(section=table.section).order_by(len(Staff.tables()).desc)
+    if len(staff_list) > 0:
+        staff = staff_list[0]
+        table.server_id = staff.id
+        db.session.add(table)
+        db.commit()
+        return {'table':jsonify(table.to_dict), 'message':f'{staff.name} was assigned to this table'}, 202
+    else:
+        return {'error': 'No servers assigned to that section'}, 404
 
 
 

@@ -74,7 +74,7 @@ class Order(db.Model):
     #     return Table.query.get(self.id)
 
 class Receipt_Item(db.Model):
-    __tablename__ = 'receipt_orders'
+    __tablename__ = 'receipt_items'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, nullable=False)
     item_name = db.Column(db.String(25), nullable=False)

@@ -3,7 +3,7 @@ from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, Staff, Order, Receipt_Item
+from models import db, Staff, Order, Receipt_Item, Table
 
 app = Flask(__name__, static_folder='public')
 CORS(app, origins=['*'])
@@ -56,7 +56,25 @@ def order_total(id):
     order.total = data['total']
     db.session.add(order)
     db.session.commit()
-    return jsonify({'order':order.to_dict(), 'items':[i.to_dict for i in order.receipt_items]}), 202
+    return jsonify({'order':order.to_dict(), 'items':[i.to_dict() for i in order.receipt_items]}), 202
+
+@app.get('/table/<int:id>/currentorder')
+def order_in_progress(id):
+    table = Table.query.get(id)
+    current_orders = table.current_orders()
+    return jsonify(current_orders[0].to_dict()), 202
+
+@app.get('/order/<int:id>/reciept_items')
+def receipt_items(id):
+    order = Order.query.get(id)
+    items = order.reciept_items()
+    return jsonify([i.to_dict() for i in items])
+
+# @app.patch('/close_order/<int:id>')
+# def close_order(id):
+#     order = Order.query.get(id)
+#     order.
+
 
 
 

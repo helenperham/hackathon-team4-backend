@@ -177,6 +177,9 @@ class Table(db.Model):
     def current_orders(self):
         return Order.query.filter_by(table_id=self.id, order_status=True)
 
+    def server(self):
+        return Staff.query.get(self.server_id)
+
 
 class Add_On(db.Model):
     __tablename__ = 'add_ons'

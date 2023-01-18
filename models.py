@@ -45,10 +45,7 @@ class Staff(db.Model):
         }
 
     def tables(self):
-        tables = []
-        for table in Table.query.filter_by(staff_id = self.id):
-            tables.append(table)
-            return tables
+        return Table.query.filter_by(server_id = self.id)
 
 class Order(db.Model):
     __tablename__ = 'orders'

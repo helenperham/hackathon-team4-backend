@@ -171,5 +171,18 @@ def desserts():
     desserts = Menu_Item.query.filter_by(category = 'dess')
     return jsonify([dess.to_dict() for dess in desserts])
 
+@app.get('/categories')
+def categories():
+    categories = set()
+    for item in Menu_Item.query.all():
+        categories.add(item.category)
+    return jsonify({'categories': categories})
+
+@app.post('/staff')
+def create_staff():
+    data=request.json
+    staff = Staff(data['name'], data['password'], data['manager'])
+    return jsonify(staff.to_dict())
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

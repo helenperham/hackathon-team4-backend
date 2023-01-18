@@ -65,17 +65,6 @@ with app.app_context():
     db.session.commit()
 
 with app.app_context():
-    table1 = Table('1', none, '4', False, '1')
-    table2 = Table('2', none, '4', False, '1')
-    table3 = Table('3', none, '2', False, '2')
-    table4 = Table('4', none, '2', False, '2')
-    table5 = Table('5', none, '4', False, '3')
-    table6 = Table('6', none, '4', False, '3')
-    table7 = Table('8', none, '4', False, '4')
-    db.session.add_all([table1, table2, table3, table4, table5, table6, table7])
-    db.session.commit()
-
-with app.app_context():
     add_on1 = Add_On('Soft Boiled Egg', none, '50', 2.50) 
     add_on2 = Add_On('Bean Sprouts', none, '50', 2.50)
     add_on3 = Add_On('Fried Tofu, none, '50', 2.50)
@@ -85,5 +74,17 @@ with app.app_context():
     add_on7 = Add_On('Extra Noodles', none, '100', 2.50)
     db.session.add_all([add_on1, add_on2, add_on3, add_on4, add_on5, add_on6, add_on7])
     db.session.commit()
+
+with app.app_context():
+    table1 = Table(1, 4, 1)
+    table2 = Table(2, 4, 1)
+    table3 = Table(3, 2, 2)
+    table4 = Table(4, 2, 2)
+    table5 = Table(5, 4, 3)
+    table6 = Table(6, 4, 3)
+    table7 = Table(8, 4, 4)
+    db.session.add_all([table1, table2, table3, table4, table5, table6, table7])
+    db.session.commit()
+
 
 print('Done! 🌳')

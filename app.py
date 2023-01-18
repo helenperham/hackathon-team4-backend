@@ -144,12 +144,32 @@ def deactivate_table(id):
 @app.get('/menu_items')
 def index():
     items = Menu_Item.query.all()
-    return jsonify(item.to_dict() for item in items)
+    return jsonify([item.to_dict() for item in items])
 
 @app.get('/menu_items/<int:id>')
-def show(id):
+def show_menu_item(id):
     item = Menu_Item.query.get(id)
     return jsonify(item.to_dict())
+
+@app.get('/menu_items/beverages')
+def beverages():
+    beverages = Menu_Item.query.filter_by(category = 'bev')
+    return jsonify([bev.to_dict() for bev in beverages])
+
+@app.get('/menu_items/appetizers')
+def appetizers():
+    appetizers = Menu_Item.query.filter_by(category = 'app')
+    return jsonify([app.to_dict() for app in appetizers])
+
+@app.get('/menu_items/entrees')
+def entrees():
+    entrees = Menu_Item.query.filter_by(category = 'entree')
+    return jsonify([entree.to_dict() for entree in entrees])
+
+@app.get('/menu_items/desserts')
+def desserts():
+    desserts = Menu_Item.query.filter_by(category = 'dess')
+    return jsonify([dess.to_dict() for dess in desserts])
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

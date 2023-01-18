@@ -146,17 +146,17 @@ class Table(db.Model):
     __tablename__ = 'tables'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Integer, nullable=False)
-    server_id = db.Column(db.Integer, nullable=False)
+    server_id = db.Column(db.Integer)
     max_num_guests = db.Column(db.Integer, nullable=False)
-    table_status = db.Column(db.Boolean, default=False)
+    table_status = db.Column(db.Boolean)
     section = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, name, server_id, max_num_guests, section):
+    def __init__(self, name, max_num_guests, section):
         self.name = name
-        self.server_id = server_id
+        self.server_id = None
         self.max_num_guests = max_num_guests
         self.table_status = False
         self.section = section

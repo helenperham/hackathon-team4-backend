@@ -151,25 +151,25 @@ def show_menu_item(id):
     item = Menu_Item.query.get(id)
     return jsonify(item.to_dict())
 
-@app.get('/menu_items/beverages')
-def beverages():
-    beverages = Menu_Item.query.filter_by(category = 'bev')
-    return jsonify([bev.to_dict() for bev in beverages])
+@app.get('/menu_items/Beverage')
+def Beverage():
+    Beverage = Menu_Item.query.filter_by(category = 'Beverage')
+    return jsonify([bev.to_dict() for bev in Beverage])
 
-@app.get('/menu_items/appetizers')
-def appetizers():
-    appetizers = Menu_Item.query.filter_by(category = 'app')
-    return jsonify([app.to_dict() for app in appetizers])
+@app.get('/menu_items/Appetizer')
+def Appetizer():
+    Appetizer = Menu_Item.query.filter_by(category = 'Appetizer')
+    return jsonify([app.to_dict() for app in Appetizer])
 
-@app.get('/menu_items/entrees')
-def entrees():
-    entrees = Menu_Item.query.filter_by(category = 'entree')
-    return jsonify([entree.to_dict() for entree in entrees])
+@app.get('/menu_items/Entree')
+def Entree():
+    Entree = Menu_Item.query.filter_by(category = 'Entree')
+    return jsonify([entree.to_dict() for entree in Entree])
 
-@app.get('/menu_items/desserts')
-def desserts():
-    desserts = Menu_Item.query.filter_by(category = 'dess')
-    return jsonify([dess.to_dict() for dess in desserts])
+@app.get('/menu_items/Dessert')
+def Dessert():
+    Dessert = Menu_Item.query.filter_by(category = 'Dessert')
+    return jsonify([dess.to_dict() for dess in Dessert])
 
 @app.get('/categories')
 def categories():

@@ -176,12 +176,15 @@ def categories():
     categories = set()
     for item in Menu_Item.query.all():
         categories.add(item.category)
-    return jsonify({'categories': categories})
+    new_list = list(categories)
+    return jsonify({'categories': new_list})
 
 @app.post('/staff')
 def create_staff():
     data=request.json
     staff = Staff(data['name'], data['password'], data['manager'])
+    db.session.add(staff)
+    db.session.commit()
     return jsonify(staff.to_dict())
 
 if __name__ == '__main__':

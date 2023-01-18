@@ -156,9 +156,5 @@ def show(id):
     item = Menu_Item.query.get(id)
     return jsonify(item.to_dict())
 
-
-
-
-
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

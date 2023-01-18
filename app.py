@@ -3,7 +3,7 @@ from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, Staff, Order, Receipt_Item, Table
+from models import db, Staff, Order, Receipt_Item, Table, Menu_Item
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -63,6 +63,13 @@ def create_item():
     db.session.commit()
     return jsonify(item.to_dict()), 202
 
+@app.delete('/receipt_items/<int:id>')
+def delete_item(id):
+    item = Receipt_Item.query.get(id)
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify(item), 200
+
 @app.post('/orders')
 def create_order():
     data = request.json
@@ -78,13 +85,13 @@ def order_total(id):
     order.total = data['total']
     order.order_status = False
     db.session.commit()
-    return jsonify({'order':order.to_dict(), 'items':order.print_receipt()}), 202
+    return jsonify({'order':order.to_dict(), 'items':order.print_receipt(), 'server': order.table().server().to_dict()}), 202
 
 @app.get('/table/<int:id>/currentorder')
 def order_in_progress(id):
     table = Table.query.get(id)
     current_orders = table.current_orders()
-    return jsonify(current_orders[0].to_dict()), 202
+    return jsonify(order.to_dict() for order in current_orders), 202
 
 @app.get('/order/<int:id>/reciept_items')
 def receipt_items(id):
@@ -132,6 +139,16 @@ def deactivate_table(id):
     table.server.id = None
     db.session.commit()
     return jsonify(table.to_dict()), 202
+
+@app.get('/menu_items')
+def index():
+    items = Menu_Item.query.all()
+    return jsonify(item.to_dict() for item in items)
+
+@app.get('/menu_items/<int:id>')
+def show(id):
+    item = Menu_Item.query.get(id)
+    return jsonify(item.to_dict())
 
 
 

@@ -3,7 +3,7 @@ from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, Staff, Order, Receipt_Item, Table
+from models import db, Staff, Order, Receipt_Item, Table, Menu_Item
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -134,6 +134,10 @@ def deactivate_table(id):
     return jsonify(table.to_dict()), 202
 
 
+@app.get('/menu_items')
+def all_menu_item():
+    menu_item = Menu_Item.query.all()
+    return jsonify([m.to_dict() for m in menu_item]), 201
 
 
 

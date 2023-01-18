@@ -151,24 +151,24 @@ def show_menu_item(id):
     item = Menu_Item.query.get(id)
     return jsonify(item.to_dict())
 
-@app.get('/menu_items/beverages')
+@app.get('/menu_items/Beverage')
 def beverages():
-    beverages = Menu_Item.query.filter_by(category = 'bev')
+    beverages = Menu_Item.query.filter_by(category = 'Beverage')
     return jsonify([bev.to_dict() for bev in beverages])
 
-@app.get('/menu_items/appetizers')
+@app.get('/menu_items/Appetizer')
 def appetizers():
-    appetizers = Menu_Item.query.filter_by(category = 'app')
+    appetizers = Menu_Item.query.filter_by(category = 'Appetizer')
     return jsonify([app.to_dict() for app in appetizers])
 
-@app.get('/menu_items/entrees')
+@app.get('/menu_items/Entree')
 def entrees():
-    entrees = Menu_Item.query.filter_by(category = 'entree')
+    entrees = Menu_Item.query.filter_by(category = 'Entree')
     return jsonify([entree.to_dict() for entree in entrees])
 
-@app.get('/menu_items/desserts')
+@app.get('/menu_items/Dessert')
 def desserts():
-    desserts = Menu_Item.query.filter_by(category = 'dess')
+    desserts = Menu_Item.query.filter_by(category = 'Dessert')
     return jsonify([dess.to_dict() for dess in desserts])
 
 @app.get('/categories')
@@ -186,6 +186,11 @@ def create_staff():
     db.session.add(staff)
     db.session.commit()
     return jsonify(staff.to_dict())
+
+@app.get('/clocked_in_staff')
+def get_clocked_in_staff():
+    staff = Staff.query.filter_by(clocked_in = True, manager = False)
+    return jsonify(s.to_dict for s in staff), 202 
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

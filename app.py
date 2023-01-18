@@ -41,11 +41,6 @@ def all_managers():
     managers = Staff.query.filter_by(manager=True)
     return jsonify([m.to_dict() for m in managers]), 201
 
-@app.get('/menu_items')
-def all_menu_items():
-    menu_items = Menu_Item.query.all()
-    return jsonify([x.to_dict() for x in menu_items]), 201
-
 @app.patch('/assign_section/<int:id>')
 def assign_section(id):
     data=request.json

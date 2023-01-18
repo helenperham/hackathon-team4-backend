@@ -187,5 +187,10 @@ def create_staff():
     db.session.commit()
     return jsonify(staff.to_dict())
 
+@app.get('/clocked_in_staff')
+def get_clocked_in_staff():
+    staff = Staff.query.filter_by(clocked_in = True, manager = False)
+    return jsonify(s.to_dict for s in staff), 202 
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

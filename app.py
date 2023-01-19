@@ -114,9 +114,14 @@ def order_total(id):
 @app.get('/table/<int:id>/currentorder')
 def order_in_progress(id):
     table = Table.query.get(id)
-    current_orders = table.current_orders()
-    items = current_orders[0].receipt_items()
-    return jsonify([item.to_dict() for item in items]), 202
+    current_orders = Order.query.filter_by(table_id=table.id).limit(1) 
+    if current_orders.count() > 0: 
+        print([order.to_dict() for order in current_orders])
+        items = current_orders[0].receipt_items()
+        print([item.to_dict() for item in items])
+        return jsonify([item.to_dict() for item in items]), 202
+    else: 
+        return jsonify([])
 
 @app.get('/order/<int:id>/reciept_items')
 def receipt_items(id):

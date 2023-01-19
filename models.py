@@ -85,24 +85,24 @@ class Receipt_Item(db.Model):
     __tablename__ = 'receipt_items'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, nullable=False)
-    item_name = db.Column(db.String(25), nullable=False)
-    item_price = db.Column(db.Float, nullable=False)
+    name = db.Column(db.String(25), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     instructions = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, order_id, item_name, item_price, instructions=None):
+    def __init__(self, order_id, name, price, instructions=None):
         self.order_id = order_id
-        self.item_name = item_name
-        self.item_price = item_price
+        self.name = name
+        self.price = price
         self.instructions = instructions
         
     def to_dict(self):
         return {
             'id': self.id,
             'order_id': self.order_id,
-            'item_name': self.item_name,
-            'item_price': self.item_price,
+            'name': self.name,
+            'price': self.price,
             'instructions': self.instructions
         }
 

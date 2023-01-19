@@ -18,6 +18,12 @@ jwt = JWTManager(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
+@app.get('/test')
+def test_route():
+    table = Table.query.first()
+    print(table.server())
+    return jsonify({})
+
 @app.get('/staff')
 def all_staff():
     staff = Staff.query.all()
@@ -44,7 +50,7 @@ def server(id):
 def show(id):
     staff = Staff.query.get(id)
     if staff:
-        return jsonify({'staff': staff.to_dict()}), 201
+        return jsonify(staff.to_dict()), 201
     else:
         return {'error': 'Staff not found'}, 404
 
@@ -86,10 +92,15 @@ def delete_item(id):
 @app.post('/orders')
 def create_order():
     data = request.json
-    order = Order(data['table_id'])
+    order = Order(data['table'])
     db.session.add(order)
     db.session.commit()
-    return jsonify(order.to_dict()), 202
+    for item in data['items']:
+        rec_item = Receipt_Item(order.id, item['name'], item['price'])
+        db.session.add(rec_item)
+        db.session.commit()
+    
+    return jsonify([i.to_dict() for i in order.receipt_items()]), 202
 
 @app.patch('/order_total/<int:id>')
 def order_total(id):
@@ -104,7 +115,8 @@ def order_total(id):
 def order_in_progress(id):
     table = Table.query.get(id)
     current_orders = table.current_orders()
-    return jsonify(order.to_dict() for order in current_orders), 202
+    items = current_orders[0].receipt_items()
+    return jsonify([item.to_dict() for item in items]), 202
 
 @app.get('/order/<int:id>/reciept_items')
 def receipt_items(id):
@@ -202,7 +214,7 @@ def create_staff():
 @app.get('/clocked_in_staff')
 def get_clocked_in_staff():
     staff = Staff.query.filter_by(clocked_in = True, manager = False)
-    return jsonify(s.to_dict for s in staff), 202 
+    return jsonify([s.to_dict() for s in staff]), 202 
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=os.environ.get('PORT', 3000))

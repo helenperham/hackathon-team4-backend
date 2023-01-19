@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from random import randint
+# from app import app
 
 db = SQLAlchemy()
 migrate = Migrate(db)
@@ -69,10 +70,7 @@ class Order(db.Model):
         }
 
     def receipt_items(self):
-        items = []
-        for item in Receipt_Item.query.filter_by(order_id = self.id):
-            items.append(item)
-            return items
+        return Receipt_Item.query.filter_by(order_id = self.id)
 
     def table(self):
         return Table.query.get(self.id)

@@ -144,6 +144,7 @@ def clock_out(id):
     staff = Staff.query.get(id)
     if staff:
         staff.clocked_in = False
+        staff.section = None
         db.session.commit()
         return jsonify(staff.to_dict()), 202
     else:

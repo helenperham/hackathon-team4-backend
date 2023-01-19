@@ -34,13 +34,25 @@ def all_servers():
     servers = Staff.query.filter_by(manager=False)
     return jsonify([s.to_dict() for s in servers]), 201
 
+#this is the route for the staff page
+@app.get('/staff/<int:id>/tables')
+def server(id):
+    staff = Staff.query.get(id)
+    if staff:
+        tables = staff.tables()
+        print(tables)
+        return jsonify({'tables': [t.to_dict() for t in tables] }), 201
+    else:
+        return {'error': 'Staff not found'}, 404
+
+# this is going to be the route for the managerpage. 
 @app.get('/staff/<int:id>')
 def show(id):
     staff = Staff.query.get(id)
     if staff:
         return jsonify(staff.to_dict()), 201
     else:
-        return {'error': 'Staff not found'}
+        return {'error': 'Staff not found'}, 404
 
 @app.get('/managers')
 def all_managers():

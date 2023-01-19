@@ -47,7 +47,6 @@ class Staff(db.Model):
 
     def tables(self):
         return Table.query.filter_by(server_id = self.id)
-            
 
 class Order(db.Model):
     __tablename__ = 'orders'
